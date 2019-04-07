@@ -22,3 +22,4 @@ if __name__ == "__main__":
             print("The stop criterion is satisfied. Process ended and model saved")
             print("Testing Score is {0}".format(test_score))
             exit(0)
+        prev_score = test_score
