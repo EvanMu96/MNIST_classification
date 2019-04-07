@@ -24,6 +24,18 @@ def id_sample(data, sample_size):
         grouped_data.append(data[data.label==i].sample(sample_size))
     return pd.concat(grouped_data) # return the balanced sampled set
 
+# lack specified class sampling
+def biased_sample(data, lack_class, sample_size):
+    grouped_data = []
+    # identically sample through entire dataset
+    for i in range(10):
+        if i!= lack_class:
+            grouped_data.append(data[data.label==i].sample(sample_size))
+        else:
+            grouped_data.append(data[data.label==i].sample(sample_size//10))
+    return pd.concat(grouped_data) # return the balanced sampled set
+
+
 # load balanced subsets
 def load_sampled_subsets(sample_size):
     train_data = pd.read_csv('data/train.csv')
@@ -33,6 +45,15 @@ def load_sampled_subsets(sample_size):
     test_label, test_image = split_label_image(test_data)
     return train_image, train_label, test_image, test_label
 
+# load a imbalanced subsets, lack of the specified class
+def load_imbalanced_subsets(lack_class, sample_size):
+    train_data = pd.read_csv('data/train.csv')
+    test_data = pd.read_csv('data/test.csv').to_numpy()
+    train_data = biased_sample(train_data, lack_class, sample_size).to_numpy()
+    train_label, train_image = split_label_image(train_data)
+    test_label, test_image = split_label_image(test_data)
+    return train_image, train_label, test_image, test_label
+
 # just for test
 if __name__ == "__main__":
-    print(load_sampled_subsets(1))
+    print(load_imbalanced_subsets(0, 3))

@@ -3,12 +3,16 @@ import sys
 from sklearn.externals import joblib
 from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC
-from utils import loadNPreprocess_data, load_sampled_subsets
+from sklearn.metrics import precision_score, recall_score, accuracy_score
+from utils import loadNPreprocess_data, load_sampled_subsets, load_imbalanced_subsets
 
 if sys.argv[1]=='all':
     train_image, train_label, test_image, test_label = loadNPreprocess_data()
 elif sys.argv[1]=='sample':
     train_image, train_label, test_image, test_label = load_sampled_subsets(200)
+elif sys.argv[1]=='biased':
+    biased_class = int(sys.argv[2])
+    train_image, train_label, test_image, test_label = load_imbalanced_subsets(biased_class,200)
 
 def experiment(kernel):
     # The neural network codes are not recommend to use because it has a better trainng stop citerion
@@ -36,6 +40,7 @@ if __name__ == "__main__":
     # do multiple training to select best model
     for i in range(exp_number):
         print("[ start iteration {} ]".format(i+1))
+        # linear or rbf kernel
         model, score = experiment('linear')
         if (i==0):
             best_model = model
@@ -46,10 +51,18 @@ if __name__ == "__main__":
         else:
             test_scores.append(score)
     
-
-    print("The mean acurracy among {0} models is {1}".format(exp_number, sum(test_scores)/len(test_scores)))
-    print("The best model acurracy is {0}". format(max(test_scores)))
-    # saving the best model into pickles file
-    #joblib.dump(best_model, 'saved_best_ANN_model.pkl')
-    # alternatively
-    #joblib.dump(best_model, 'saved_best_rbf_SVM_model.pkl')
+    if sys.argv[1] != 'biased':
+        print("The mean acurracy among {0} models is {1}".format(exp_number, sum(test_scores)/len(test_scores)))
+        print("The best model acurracy is {0}". format(max(test_scores)))
+        # saving the best model into pickles file
+        #joblib.dump(best_model, 'saved_best_ANN_model.pkl')
+        # alternatively
+        #joblib.dump(best_model, 'saved_best_rbf_SVM_model.pkl')
+    elif sys.argv[1]=='biased':
+        y_pred = best_model.predict(test_image)
+        pre = precision_score(test_label, y_pred, average=None)
+        rec = recall_score(test_label, y_pred, average=None)
+        acr = accuracy_score(test_label, y_pred)
+        print("The accuracy for each class is {}".format(acr))
+        print("The precision for each class is {}".format(pre))
+        print("The recall for each class is {}".format(rec))
