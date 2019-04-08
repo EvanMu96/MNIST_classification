@@ -25,8 +25,8 @@ if __name__ == "__main__":
         model.fit(train_image, train_label)
         test_score = model.score(test_image, test_label)
         print("The score on test set is {0}".format(test_score))
-        if (abs(test_score - prev_score)<0.001) and (test_score>0.90):
-            joblib.dump(model, 'best_ANN_model_imba.pkl')
+        if (abs(test_score - prev_score)<0.0005) and (test_score>0.90):
+            #joblib.dump(model, 'best_ANN_model_imba.pkl')
             print("The stop criterion is satisfied. Process ended and model saved")
             print("Testing Score is {0}".format(test_score))
             y_pred = model.predict(test_image)

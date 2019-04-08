@@ -51,14 +51,14 @@ if __name__ == "__main__":
         else:
             test_scores.append(score)
     
-    if sys.argv[1] != 'biased':
+    if sys.argv[1] == 'all':
         print("The mean acurracy among {0} models is {1}".format(exp_number, sum(test_scores)/len(test_scores)))
         print("The best model acurracy is {0}". format(max(test_scores)))
         # saving the best model into pickles file
         #joblib.dump(best_model, 'saved_best_ANN_model.pkl')
         # alternatively
-        #joblib.dump(best_model, 'saved_best_rbf_SVM_model.pkl')
-    elif sys.argv[1]=='biased':
+        joblib.dump(best_model, 'saved_best_rbf_SVM_model.pkl')
+    else:
         y_pred = best_model.predict(test_image)
         pre = precision_score(test_label, y_pred, average=None)
         rec = recall_score(test_label, y_pred, average=None)

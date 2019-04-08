@@ -106,3 +106,6 @@ venv.bak/
 # macOS config
 */.DS_Store
 .DS_Store
+
+# static
+static/
