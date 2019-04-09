@@ -1,5 +1,6 @@
 import numpy as np
 import sys
+import time
 from sklearn.externals import joblib
 from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC
@@ -23,8 +24,10 @@ def experiment(kernel):
      l2 penalty, C = 100, linear kernel Support Vector Machine
      please make sure to turn on the random_state flag inorder get a raomdom initialization
     """
-    model = SVC(kernel=kernel, C=100, random_state=1)
+    model = SVC(kernel=kernel, C=100, random_state=0)
+    start_time = time.clock()
     model.fit(train_image, train_label)
+    print("Training ending in {}".format(time.clock()-start_time))
     # scoring, evaluation with training and test data
     #print("Training set score: {}".format(model.score(train_image, train_label)))
     test_score = model.score(test_image, test_label)
@@ -34,14 +37,14 @@ def experiment(kernel):
 if __name__ == "__main__":
     # specify how many models should the program train
     print("-------------start training-------------")
-    exp_number = 5
+    exp_number = 1
     test_scores = []
     best_model = None
     # do multiple training to select best model
     for i in range(exp_number):
         print("[ start iteration {} ]".format(i+1))
         # linear or rbf kernel
-        model, score = experiment('linear')
+        model, score = experiment('rbf')
         if (i==0):
             best_model = model
             test_scores.append(score)
