@@ -14,7 +14,10 @@ elif sys.argv[1]=='sample':
 elif sys.argv[1]=='biased':
     biased_class = int(sys.argv[2])
     train_image, train_label, test_image, test_label = load_imbalanced_subsets(biased_class,200)
-
+elif sys.argv[1]=='dtype':
+    train_image, train_label, test_image, test_label = loadNPreprocess_data()
+    print(train_image.dtype)
+    exit(0)
 def experiment(kernel):
     # The neural network codes are not recommend to use because it has a better trainng stop citerion
     # the hidden layer neron numbers are 200, 300, 200 respectively

@@ -9,12 +9,15 @@ def split_label_image(data):
     return data_label, data_image
 
 # load entire dataset
-def loadNPreprocess_data():
-    train_data = pd.read_csv('data/train.csv').to_numpy()
+def loadNPreprocess_data(train=True):
     test_data = pd.read_csv('data/test.csv').to_numpy()
-    train_label, train_image = split_label_image(train_data)
     test_label, test_image = split_label_image(test_data)
-    return train_image, train_label, test_image, test_label
+    if train==True:
+        train_data = pd.read_csv('data/train.csv').to_numpy()
+        train_label, train_image = split_label_image(train_data)
+        return train_image, train_label, test_image, test_label
+    else:
+        return test_image, test_label
 
 # random identically sample
 def id_sample(data, sample_size):
@@ -53,6 +56,7 @@ def load_imbalanced_subsets(lack_class, sample_size):
     train_label, train_image = split_label_image(train_data)
     test_label, test_image = split_label_image(test_data)
     return train_image, train_label, test_image, test_label
+
 
 # just for test
 if __name__ == "__main__":
